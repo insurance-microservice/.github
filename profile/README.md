@@ -74,13 +74,25 @@ Ensure that all paths and environment variables are correctly configured.
 
 ### Step 5: Build and Start Services
 
-Run Docker Compose with the build flag to build all images and start the services:
+Run Docker Compose with the build flag to build all images and start the services. Choose one of the two options below:
+
+**Option 1: Run in Foreground (View Logs)**
 
 ```bash
 docker-compose up --build
 ```
 
-This command will:
+This command will display logs from all services in real-time. Press CTRL+C to stop (services will be stopped).
+
+**Option 2: Run in Background (Detached Mode)**
+
+```bash
+docker-compose up -d --build
+```
+
+This command runs containers in the background without blocking the terminal. Use `docker logs [service-name]` to view logs when needed.
+
+Both commands will:
 - Build Docker images for all microservices
 - Start all services including infrastructure components
 - Create necessary networks and volumes
@@ -93,13 +105,30 @@ This command will:
 
 ### Step 6: Verify Services Are Running
 
-Once all services have started, verify that they are running correctly by checking Docker logs:
+Once all services have started, verify that they are running correctly by checking running containers:
 
 ```bash
-docker-compose logs -f
+docker ps
 ```
 
-You should see logs from all services. Press CTRL+C to exit the logs view.
+You should see all 11 containers running with status `Up`. The microservices platform consists of the following components:
+
+**Core Services:**
+- `gateway-service` - API Gateway (port 8080) - Entry point for all API requests
+- `auth-service` - Authentication Service - Handles authentication and authorization
+- `customer-service` - Customer Service - Manages customer information
+- `policy-service` - Policy Service - Manages insurance policies
+- `claim-service` - Claim Service - Handles insurance claims
+- `payment-service` - Payment Service - Processes payments
+- `underwriting-service` - Underwriting Service - Handles underwriting processes
+
+**Infrastructure:**
+- `postgres` - PostgreSQL Database (port 5432, healthy) - Primary database
+- `kafka` - Kafka Message Broker - Asynchronous communication
+- `zookeeper` - Zookeeper Coordination - Kafka coordination and synchronization
+- `kafdrop` - Kafka UI (port 9000) - Kafka monitoring and topic management
+
+**All containers should show status `Up` and `(healthy)` for postgres. If any container shows `Exited`, check logs with `docker logs [service-name]`.**
 
 ### Step 7: Access Services
 
@@ -108,22 +137,6 @@ After the services are running, you can access them at:
 - API Gateway: http://localhost:8080
 - Kafka UI (Kafdrop): http://localhost:9000
 - PostgreSQL: localhost:5432
-
-## Service Details
-
-The microservices architecture includes:
-
-- **API Gateway**: Entry point for all API requests (port 8080)
-- **Auth Service**: Handles authentication and authorization
-- **Customer Service**: Manages customer information
-- **Policy Service**: Manages insurance policies
-- **Claim Service**: Handles insurance claims
-- **Payment Service**: Processes payments
-- **Underwriting Service**: Handles underwriting processes
-- **PostgreSQL**: Primary database
-- **Kafka**: Message broker for async communication
-- **Zookeeper**: Kafka coordination
-- **Kafdrop**: Kafka UI for monitoring
 
 ## Environment Variables
 
@@ -175,19 +188,19 @@ docker-compose down -v
 ### Services Not Starting
 
 - Check that all ports are available: 5432, 2181, 29092, 9000, 8080
-- Review logs with `docker-compose logs [service-name]`
+- Review logs with `docker logs [service-name]`
 - Ensure Docker daemon is running
 
 ### Database Connection Issues
 
-- Verify PostgreSQL is running: `docker-compose logs postgres`
+- Verify PostgreSQL is running: `docker logs postgres`
 - Check database credentials in `.env` file
 - Ensure `database/init.sql` is present in the infra directory
 
 ### Kafka Issues
 
-- Verify Zookeeper is running: `docker-compose logs zookeeper`
-- Check Kafka logs: `docker-compose logs kafka`
+- Verify Zookeeper is running: `docker logs zookeeper`
+- Check Kafka logs: `docker logs kafka`
 - Access Kafdrop at http://localhost:9000 to monitor Kafka topics
 
 ### Port Conflicts
@@ -211,16 +224,6 @@ docker-compose up --build auth-service
 ```
 
 ## Additional Commands
-
-View running containers:
-```bash
-docker ps
-```
-
-View logs for a specific service:
-```bash
-docker logs [service-name]
-```
 
 Execute a command in a running container:
 ```bash
