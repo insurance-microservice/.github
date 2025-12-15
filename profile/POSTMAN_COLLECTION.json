@@ -1,21 +1,14 @@
 {
 	"info": {
+		"_postman_id": "8fa98243-3611-4c8a-9ddb-9434f015c384",
 		"name": "Insurance Microservices API",
 		"description": "Complete API collection for Insurance Microservices platform. All requests are routed through API Gateway at http://localhost:8080",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "31936564"
 	},
-	"variable": [
-		{
-			"key": "jwt_token",
-			"value": "",
-			"type": "string",
-			"description": "JWT token from login response - update after each login"
-		}
-	],
 	"item": [
 		{
 			"name": "Authentication",
-			"description": "User registration and login endpoints",
 			"item": [
 				{
 					"name": "Register User",
@@ -32,26 +25,30 @@
 							"mode": "raw",
 							"raw": "{\n  \"username\": \"john_doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/auth/register",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"auth",
-								"register"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/auth/register",
 						"description": "Register a new user. Fields: username, email, password"
 					},
 					"response": []
 				},
 				{
 					"name": "Login User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.accessToken) {",
+									"    pm.collectionVariables.set(\"jwt_token\", jsonData.accessToken);",
+									"    console.log(\"JWT token automatically set from login response\");",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -65,44 +62,16 @@
 							"mode": "raw",
 							"raw": "{\n  \"identity\": \"admin\",\n  \"password\": \"admin321\"\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/auth/login",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"auth",
-								"login"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/auth/login",
 						"description": "Login user and receive JWT token. Use 'identity' field (username or email). Response contains 'accessToken' field"
 					},
-					"response": [],
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = pm.response.json();",
-									"if (jsonData.accessToken) {",
-									"    pm.collectionVariables.set(\"jwt_token\", jsonData.accessToken);",
-									"    console.log(\"JWT token automatically set from login response\");",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					]
+					"response": []
 				}
-			]
+			],
+			"description": "User registration and login endpoints"
 		},
 		{
 			"name": "Customer Management",
-			"description": "Customer CRUD operations",
 			"item": [
 				{
 					"name": "Get All Customers",
@@ -115,20 +84,7 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/customer/all",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"customer",
-								"all"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/customer/all",
 						"description": "Retrieve all customers (requires ADMIN role)"
 					},
 					"response": []
@@ -144,20 +100,7 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/customer/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"customer",
-								"1"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/customer/1",
 						"description": "Retrieve a specific customer by ID. Fields returned: customerId, fullName, email, phone, age"
 					},
 					"response": []
@@ -182,19 +125,7 @@
 							"mode": "raw",
 							"raw": "{\n  \"fullName\": \"Jane Smith\",\n  \"email\": \"jane.smith@example.com\",\n  \"phone\": \"+1234567890\",\n  \"age\": 28\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/customer",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"customer"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/customer",
 						"description": "Create a new customer. Required fields: fullName, email, phone, age"
 					},
 					"response": []
@@ -219,58 +150,16 @@
 							"mode": "raw",
 							"raw": "{\n  \"fullName\": \"Jane Smith Updated\",\n  \"email\": \"jane.updated@example.com\",\n  \"phone\": \"+9876543210\",\n  \"age\": 29\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/customer/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"customer",
-								"1"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/customer/1",
 						"description": "Update an existing customer (requires ADMIN role). All fields can be updated"
 					},
 					"response": []
-				},
-				{
-					"name": "Delete Customer",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{jwt_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/customer/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"customer",
-								"1"
-							],
-							"port": "8080"
-						},
-						"description": "Delete a customer"
-					},
-					"response": []
 				}
-			]
+			],
+			"description": "Customer CRUD operations"
 		},
 		{
 			"name": "Policy Management",
-			"description": "Insurance policy CRUD and query operations",
 			"item": [
 				{
 					"name": "Get Customer Policies",
@@ -283,21 +172,7 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/policy/customer/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"policy",
-								"customer",
-								"1"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/policy/customer/1",
 						"description": "Get all policies for a specific customer. Returns list of PolicyResponseDto"
 					},
 					"response": []
@@ -313,20 +188,7 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/policy/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"policy",
-								"1"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/policy/1",
 						"description": "Get a specific policy by ID. Fields: policyId, customerId, policyNumber, type, premiumAmount, coverageAmount, status, startDate, endDate"
 					},
 					"response": []
@@ -351,28 +213,16 @@
 							"mode": "raw",
 							"raw": "{\n  \"customerId\": 1,\n  \"policyType\": \"HEALTH\",\n  \"premiumAmount\": 5000.00,\n  \"coverageAmount\": 100000.00\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/policy",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"policy"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/policy",
 						"description": "Create a new insurance policy. Required fields: customerId, policyType, premiumAmount, coverageAmount"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Insurance policy CRUD and query operations"
 		},
 		{
 			"name": "Claim Management",
-			"description": "Insurance claim submission and tracking",
 			"item": [
 				{
 					"name": "Get Claims by Policy",
@@ -385,21 +235,7 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/claim/policy/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"claim",
-								"policy",
-								"1"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/claim/policy/1",
 						"description": "Get all claims for a specific policy. Returns list of ClaimDto"
 					},
 					"response": []
@@ -415,20 +251,7 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/claim/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"claim",
-								"1"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/claim/1",
 						"description": "Get a specific claim by ID. Fields: claimId, policyId, claimNumber, description, status, createdAt, approvedAt"
 					},
 					"response": []
@@ -453,19 +276,7 @@
 							"mode": "raw",
 							"raw": "{\n  \"policyId\": 1,\n  \"description\": \"Medical expenses due to hospitalization\",\n  \"claimNumber\": \"CLM-001\",\n  \"status\": \"SUBMITTED\"\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/claim",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"claim"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/claim",
 						"description": "Submit a new insurance claim. Required fields: policyId, description, claimNumber, status"
 					},
 					"response": []
@@ -481,30 +292,16 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/claim/approve/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"claim",
-								"approve",
-								"1"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/claim/approve/1",
 						"description": "Approve a submitted claim (requires ADMIN role)"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Insurance claim submission and tracking"
 		},
 		{
 			"name": "Payment Management",
-			"description": "Payment processing and tracking",
 			"item": [
 				{
 					"name": "Get Payments by Policy",
@@ -517,21 +314,7 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/payment/policy/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"payment",
-								"policy",
-								"1"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/payment/policy/1",
 						"description": "Get all payments for a specific policy. Returns list of PaymentDto"
 					},
 					"response": []
@@ -547,20 +330,7 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/payment/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"payment",
-								"1"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/payment/1",
 						"description": "Get a specific payment by ID. Fields: paymentId, policyId, amount, status, billingDate, paymentDate"
 					},
 					"response": []
@@ -585,19 +355,7 @@
 							"mode": "raw",
 							"raw": "{\n  \"policyId\": 1,\n  \"amount\": 5000.00,\n  \"status\": \"PENDING\",\n  \"billingDate\": \"2024-12-01\"\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/payment",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"payment"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/payment",
 						"description": "Create a new payment. Required fields: policyId, amount, status, billingDate"
 					},
 					"response": []
@@ -622,65 +380,36 @@
 							"mode": "raw",
 							"raw": "{\n  \"policyId\": 1,\n  \"amount\": 5000.00,\n  \"status\": \"COMPLETED\",\n  \"billingDate\": \"2024-12-01\",\n  \"paymentDate\": \"2024-12-01\"\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/payment/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"payment",
-								"1"
-							],
-							"port": "8080"
-						},
+						"url": "http://localhost:8080/api/v1/payment/1",
 						"description": "Update an existing payment. All fields can be updated: policyId, amount, status, billingDate, paymentDate"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Payment processing and tracking"
 		},
 		{
-			"name": "Automation Test Flow",
-			"description": "Complete end-to-end automation test flow for the insurance platform",
+			"name": "Test Flow",
 			"item": [
 				{
-					"name": "1. Register Admin User",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
+					"name": "1. Login Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.accessToken) {",
+									"    pm.collectionVariables.set(\"jwt_token\", jsonData.accessToken);",
+									"    console.log(\"JWT token automatically set from login response\");",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
 							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"username\": \"admin\",\n  \"email\": \"admin@local.prod\",\n  \"password\": \"admin321\"\n}"
-						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/auth/register",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"auth",
-								"register"
-							],
-							"port": "8080"
-						},
-						"description": "Step 1: Register a test admin user"
-					},
-					"response": []
-				},
-				{
-					"name": "2. Login Admin",
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -694,47 +423,13 @@
 							"mode": "raw",
 							"raw": "{\n  \"identity\": \"admin\",\n  \"password\": \"admin321\"\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/auth/login",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"auth",
-								"login"
-							],
-							"port": "8080"
-						},
-						"description": "Step 2: Login to get JWT token",
-						"event": [
-							{
-								"listen": "test",
-								"script": {
-									"type": "text/javascript",
-									"exec": [
-										"if (pm.response.code === 200) {",
-										"    var jsonData = pm.response.json();",
-										"    pm.collectionVariables.set('jwt_token', jsonData.accessToken);",
-										"    pm.test('Login successful - Token captured', function() {",
-										"        pm.expect(jsonData.accessToken).to.exist;",
-										"    });",
-										"} else {",
-										"    pm.test('Login failed', function() {",
-										"        pm.expect(false).to.be.true;",
-										"    });",
-										"}"
-									]
-								}
-							}
-						]
+						"url": "http://localhost:8080/api/v1/auth/login",
+						"description": "Step 2: Login to get JWT token"
 					},
 					"response": []
 				},
 				{
-					"name": "3. Create Customer",
+					"name": "2. Create Customer",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -753,40 +448,13 @@
 							"mode": "raw",
 							"raw": "{\n  \"fullName\": \"Test Customer\",\n  \"email\": \"test.customer@example.com\",\n  \"phone\": \"+1234567890\",\n  \"age\": 30\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/customer",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"customer"
-							],
-							"port": "8080"
-						},
-						"description": "Step 3: Create a test customer",
-						"event": [
-							{
-								"listen": "test",
-								"script": {
-									"type": "text/javascript",
-									"exec": [
-										"pm.test('Customer created successfully', function() {",
-										"    pm.expect(pm.response.code).to.eql(200);",
-										"    var jsonData = pm.response.json();",
-										"    pm.collectionVariables.set('customerId', '1');",
-										"});"
-									]
-								}
-							}
-						]
+						"url": "http://localhost:8080/api/v1/customer",
+						"description": "Step 3: Create a test customer"
 					},
 					"response": []
 				},
 				{
-					"name": "4. Create Policy (ADMIN)",
+					"name": "3. Create Policy (ADMIN)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -805,39 +473,13 @@
 							"mode": "raw",
 							"raw": "{\n  \"customerId\": 1,\n  \"policyType\": \"HEALTH\",\n  \"premiumAmount\": 5000.00,\n  \"coverageAmount\": 100000.00\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/policy",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"policy"
-							],
-							"port": "8080"
-						},
-						"description": "Step 4: Create an insurance policy",
-						"event": [
-							{
-								"listen": "test",
-								"script": {
-									"type": "text/javascript",
-									"exec": [
-										"pm.test('Policy created successfully', function() {",
-										"    pm.expect(pm.response.code).to.eql(200);",
-										"    pm.collectionVariables.set('policyId', '1');",
-										"});"
-									]
-								}
-							}
-						]
+						"url": "http://localhost:8080/api/v1/policy",
+						"description": "Step 4: Create an insurance policy"
 					},
 					"response": []
 				},
 				{
-					"name": "5. Process Payment (ADMIN)",
+					"name": "4. Process Payment (ADMIN)",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -856,39 +498,13 @@
 							"mode": "raw",
 							"raw": "{\n  \"policyId\": 1,\n  \"amount\": 5000.00,\n  \"status\": \"PENDING\",\n  \"billingDate\": \"2024-12-01\"\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/payment",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"payment"
-							],
-							"port": "8080"
-						},
-						"description": "Step 5: Process payment for policy",
-						"event": [
-							{
-								"listen": "test",
-								"script": {
-									"type": "text/javascript",
-									"exec": [
-										"pm.test('Payment processed successfully', function() {",
-										"    pm.expect(pm.response.code).to.eql(200);",
-										"    pm.collectionVariables.set('paymentId', '1');",
-										"});"
-									]
-								}
-							}
-						]
+						"url": "http://localhost:8080/api/v1/payment",
+						"description": "Step 5: Process payment for policy"
 					},
 					"response": []
 				},
 				{
-					"name": "6. Get Policy Status",
+					"name": "5. Get Policy Status",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -898,41 +514,13 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/policy/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"policy",
-								"1"
-							],
-							"port": "8080"
-						},
-						"description": "Step 6: Verify policy status is ACTIVE",
-						"event": [
-							{
-								"listen": "test",
-								"script": {
-									"type": "text/javascript",
-									"exec": [
-										"pm.test('Policy status verified', function() {",
-										"    pm.expect(pm.response.code).to.eql(200);",
-										"    var jsonData = pm.response.json();",
-										"    pm.expect(jsonData.data).to.have.property('status');",
-										"});"
-									]
-								}
-							}
-						]
+						"url": "http://localhost:8080/api/v1/policy/1",
+						"description": "Step 6: Verify policy status is ACTIVE"
 					},
 					"response": []
 				},
 				{
-					"name": "7. Submit Claim",
+					"name": "6. Submit Claim",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -951,39 +539,13 @@
 							"mode": "raw",
 							"raw": "{\n  \"policyId\": 1,\n  \"description\": \"Test claim for automation\",\n  \"claimNumber\": \"CLM-AUTO-001\",\n  \"status\": \"PENDING\"\n}"
 						},
-						"url": {
-							"raw": "http://localhost:8080/api/v1/claim",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"claim"
-							],
-							"port": "8080"
-						},
-						"description": "Step 7: Submit a test claim",
-						"event": [
-							{
-								"listen": "test",
-								"script": {
-									"type": "text/javascript",
-									"exec": [
-										"pm.test('Claim submitted successfully', function() {",
-										"    pm.expect(pm.response.code).to.eql(200);",
-										"    pm.collectionVariables.set('claimId', '1');",
-										"});"
-									]
-								}
-							}
-						]
+						"url": "http://localhost:8080/api/v1/claim",
+						"description": "Step 7: Submit a test claim"
 					},
 					"response": []
 				},
 				{
-					"name": "8. Approve Claim (ADMIN only)",
+					"name": "7. Approve Claim (ADMIN only)",
 					"request": {
 						"method": "PUT",
 						"header": [
@@ -993,40 +555,13 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/claim/approve/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"claim",
-								"approve",
-								"1"
-							],
-							"port": "8080"
-						},
-						"description": "Step 8: Approve the submitted claim (Admin only)",
-						"event": [
-							{
-								"listen": "test",
-								"script": {
-									"type": "text/javascript",
-									"exec": [
-										"pm.test('Claim approved successfully', function() {",
-										"    pm.expect(pm.response.code).to.eql(200);",
-										"});"
-									]
-								}
-							}
-						]
+						"url": "http://localhost:8080/api/v1/claim/approve/1",
+						"description": "Step 8: Approve the submitted claim (Admin only)"
 					},
 					"response": []
 				},
 				{
-					"name": "9. Verify Final State",
+					"name": "8. Verify Final State",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -1036,40 +571,24 @@
 								"type": "text"
 							}
 						],
-						"url": {
-							"raw": "http://localhost:8080/api/v1/claim/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"path": [
-								"api",
-								"v1",
-								"claim",
-								"1"
-							],
-							"port": "8080"
-						},
-						"description": "Step 9: Verify claim is in APPROVED state",
-						"event": [
-							{
-								"listen": "test",
-								"script": {
-									"type": "text/javascript",
-									"exec": [
-										"pm.test('Final verification - Claim APPROVED', function() {",
-										"    pm.expect(pm.response.code).to.eql(200);",
-										"    var jsonData = pm.response.json();",
-										"    pm.expect(jsonData.data.status).to.eql('APPROVED');",
-										"});"
-									]
-								}
-							}
-						]
+						"url": "http://localhost:8080/api/v1/claim/policy/1",
+						"description": "Step 9: Verify claim is in APPROVED state"
 					},
 					"response": []
 				}
-			]
+			],
+			"description": "Complete end-to-end test flow for the insurance platform"
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string",
+			"description": {
+				"content": "JWT token from login response - update after each login",
+				"type": "text/plain"
+			}
 		}
 	]
 }
