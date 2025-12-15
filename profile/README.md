@@ -98,11 +98,6 @@ Both commands will:
 - Create necessary networks and volumes
 - Initialize the database
 
-**Default Admin Credentials** (from `.env`):
-- Username: `admin`
-- Email: `admin@local.prod`
-- Password: `admin321`
-
 ### Step 6: Verify Services Are Running
 
 Once all services have started, verify that they are running correctly by checking running containers:
@@ -157,6 +152,8 @@ The `.env` file (located in the `infra` directory) contains all configuration va
 - `ADMIN_USERNAME` - Admin username (default: `admin`)
 - `ADMIN_EMAIL` - Admin email (default: `admin@local.prod`)
 - `ADMIN_PASSWORD` - Admin password (default: `admin321`)
+
+> **Note**: Use these credentials for admin access to the API Gateway
 
 ### Kafka Configuration
 - `KAFKA_BOOTSTRAP_SERVERS` - Kafka bootstrap servers (default: `kafka:9092`)
